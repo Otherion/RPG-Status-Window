@@ -1,6 +1,4 @@
 import PySimpleGUI as sg
-import time
-
 
 
 def status_window():
@@ -48,8 +46,3 @@ def status_window():
             sg.Popup('Not a Class:', 'If you see this, go back and obtain a class!')
         if button == 'Class Info' and start_class.DisplayText == 'Warrior':         #Example of a popup display explaining the class when the button is pressed
             sg.Popup('Warrior Class:', 'A class that specializes in melee combat')  #Placeholder description
-
-
-
-
-status_window()

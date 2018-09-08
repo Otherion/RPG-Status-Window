@@ -7,7 +7,8 @@ def status_window():
     form = sg.FlexForm('Status Window', auto_size_text=True, auto_size_buttons=False, grab_anywhere=False)
 
     start_class = sg.Text('', size=(12, 1), font=('Helvetica', 20), background_color='black', text_color='white', justification='center')
-
+    
+    #Classes are placeholder names and will change
     class_list = ['Warrior', 'Wizard', 'Rogue', 'Sword Mage', 'Mercenary', 'Sorcerer', 'All-Rounder']
 
     layout = [[sg.Text('Name:'), sg.InputText('', key='name')],    #Layout for the status window
@@ -45,4 +46,4 @@ def status_window():
         if button == 'Class Info' and start_class.DisplayText == '':
             sg.Popup('Not a Class:', 'If you see this, go back and obtain a class!')
         if button == 'Class Info' and start_class.DisplayText == 'Warrior':         #Example of a popup display explaining the class when the button is pressed
-            sg.Popup('Warrior Class:', 'A class that specializes in melee combat')  #Placeholder description
+            sg.Popup('Warrior Class:', 'A class that specializes in melee combat')  #Placeholder descriptions

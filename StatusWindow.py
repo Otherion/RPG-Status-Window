@@ -5,13 +5,14 @@ def status_window():
 
     sg.ChangeLookAndFeel('TealMono')  #Changes color scheme of window created
     form = sg.FlexForm('Status Window', auto_size_text=True, auto_size_buttons=False, grab_anywhere=False)
-
+    
+    cname = sg.Text('', size=(20, 1))   # The name of your character
     start_class = sg.Text('', size=(12, 1), font=('Helvetica', 20), background_color='black', text_color='white', justification='center')
     
     #Classes are placeholder names and will change
     class_list = ['Warrior', 'Wizard', 'Rogue', 'Sword Mage', 'Mercenary', 'Sorcerer', 'All-Rounder']
 
-    layout = [[sg.Text('Name:'), sg.InputText('', key='name')],    #Layout for the status window
+    layout = [[sg.Text('Name:'), cname, sg.RealtimeButton('Choose Name')],    #Layout for the status window
               [sg.Text('_' * 55)],
               [sg.Text('Stats:')],
               [sg.Text('STR:', size=(5, 1)), sg.Spin([i for i in range(0, 101)], initial_value=0, key='STR', size=(5, 1))],
@@ -24,6 +25,11 @@ def status_window():
 
     while True:
         button, values = form.ReadNonBlocking()
+        
+        if button == 'Choose Name':
+            name = sg.PopupGetText('What is your name?')
+            cname.Update(name)
+        
         if values is None or button == 'Exit': break                        #Program ends successfully if 'Quit' is clicked or window is closed
 
         #When no stat requirements are met:

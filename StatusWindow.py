@@ -68,9 +68,7 @@ def status_window():
         
         # Button that resets stats back initial values as well as class name
         if button == 'Reset Stats':
-            form.FindElement('STR').Update(istat)
-            form.FindElement('INT').Update(istat)
-            form.FindElement('DEX').Update(istat)
+            form.Fill({'STR': 5, 'INT': 5, 'DEX': 5})
             form.FindElement('class').Update('')
         
         #Class info button

@@ -15,7 +15,7 @@ def status_window():
                sg.ReadFormButton('Choose Name')],
               [sg.Text('_' * 55)],
               [sg.Text('Stats:')],
-              [sg.Text('Points Remaining'), sg.InputText('15', size=(3, 1), do_not_clear=True, key='points')],
+              [sg.Text('Points Remaining'), sg.Text('15', size=(2, 1), do_not_clear=True, key='points')],
               [sg.Text('STR:', size=(5, 1)),
                sg.Spin([i for i in range(5, 101)], initial_value=istat, key='STR', size=(5, 1), change_submits=True)],
               [sg.Text('INT:', size=(5, 1)),
@@ -51,11 +51,11 @@ def status_window():
         if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
 
         # How skill points remaining is determined (not sure how to stop stats from increasing when spoints = 0)
-        if 0 < spoints < 16:
+        if 0 <= form.FindElement('points').DisplayText < 16:
             stat = [strength, intel, dex]
             if 14 < sum(stat) <= 30:
                 spoints = 15 - (sum(stat) - 15)
-                form.Fill({'points': spoints})
+                form.FindElement('points').Update(spoints)
 
         # Classes based on one stat:
         if strength >= 10:
@@ -79,7 +79,8 @@ def status_window():
 
         # # Button that resets stats back initial values as well as class name
         elif button == 'Reset Stats':
-            form.Fill({'STR': '5', 'INT': '5', 'DEX': '5', 'points': 15})
+            form.Fill({'STR': '5', 'INT': '5', 'DEX': '5'})
+            form.FindElement('points').Update(15)
             if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
 
         # Class info button

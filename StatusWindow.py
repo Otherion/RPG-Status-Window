@@ -53,9 +53,9 @@ def status_window():
         # How skill points remaining is determined (not sure how to stop stats from increasing when spoints = 0)
         if 0 < spoints < 16:
             stat = [strength, intel, dex]
-            if 15 < sum(stat) <= 30:
+            if 14 < sum(stat) <= 30:
                 spoints = 15 - (sum(stat) - 15)
-                form.FindElement('points').Update(spoints)
+                form.Fill({'points': spoints})
 
         # Classes based on one stat:
         if strength >= 10:

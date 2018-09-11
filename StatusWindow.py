@@ -1,6 +1,19 @@
 import PySimpleGUI as sg
 
+def magic_types():
+    with sg.FlexForm('Popup') as form: # begin with a blank form
 
+        layout = [[sg.Text('Choose a magic to specialize in:')],
+                  [sg.Radio('Fire', 'magic', size=(8, 1)), sg.Radio('Ice', 'magic', size=(8, 1))],
+                  [sg.Radio('Water', 'magic', size=(8, 1)), sg.Radio('Space', 'magic', size=(8, 1))],
+                  [sg.Radio('Earth', 'magic', size=(8, 1)), sg.Radio('Time', 'magic', size=(8, 1))],
+                  [sg.Radio('Wind', 'magic', size=(8, 1)), sg.Radio('Holy', 'magic', size=(8, 1))],
+                  [sg.Radio('Electricity', 'magic', size=(8, 1)), sg.Radio('Shadow', 'magic', size=(8, 1))],
+                  [sg.OK()]]
+
+        button, values = form.LayoutAndRead(layout)
+        return values
+    
 def status_window():
 
     sg.ChangeLookAndFeel('TealMono')  #Changes color scheme of window created
@@ -9,19 +22,19 @@ def status_window():
     #Classes are placeholder names and will change
     class_list = ['Warrior', 'Wizard', 'Rogue', 'Sword Mage', 'Mercenary', 'Sorcerer', 'All-Rounder']
 
-    istat = 5   # Initial stat value
+
     # Layout for the status window
     layout = [[sg.Text('Name:'), sg.Text('', size=(20, 1), background_color='black', text_color='white', key='cname'),
                sg.ReadFormButton('Choose Name')],
               [sg.Text('_' * 55)],
               [sg.Text('Stats:')],
-              [sg.Text('Points Remaining'), sg.Text('15', size=(2, 1), do_not_clear=True, key='points')],
               [sg.Text('STR:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=istat, key='STR', size=(5, 1), change_submits=True)],
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='STR', size=(5, 1), change_submits=True)],
               [sg.Text('INT:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=istat, key='INT', size=(5, 1), change_submits=True)],
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='INT', size=(5, 1), change_submits=True),
+               sg.ReadFormButton('Magic Type')],
               [sg.Text('DEX:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=istat, key='DEX', size=(5, 1), change_submits=True)],
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='DEX', size=(5, 1), change_submits=True)],
               [sg.Text('Class:', size=(5, 1), font=('Helvetica', 20)),
                sg.Text('', size=(13, 1), font=('Helvetica', 20), background_color='black', text_color='white',
                        justification='center', key='class'),
@@ -44,18 +57,10 @@ def status_window():
             strength = int(values['STR'])
             intel = int(values['INT'])
             dex = int(values['DEX'])
-            spoints = int(values['points'])
         except:
             continue
 
         if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
-
-        # How skill points remaining is determined (not sure how to stop stats from increasing when spoints = 0)
-        if 0 <= form.FindElement('points').DisplayText < 16:
-            stat = [strength, intel, dex]
-            if 14 < sum(stat) <= 30:
-                spoints = 15 - (sum(stat) - 15)
-                form.FindElement('points').Update(spoints)
 
         # Classes based on one stat:
         if strength >= 10:
@@ -76,11 +81,16 @@ def status_window():
         # Classes based on three stats:
         if strength >= 10 and intel >= 10 and dex >= 10:
             form.FindElement('class').Update(class_list[6])
+            
+        # What the 'Magic Type' button does and an example of it changing the class
+        if button == 'Magic Type':
+            values = magic_types()
+            if values[0] is True and form.FindElement('class').DisplayText == 'Wizard':
+                form.FindElement('class').Update('Fire' + ' Wizard')
 
-        # # Button that resets stats back initial values as well as class name
-        elif button == 'Reset Stats':
-            form.Fill({'STR': '5', 'INT': '5', 'DEX': '5'})
-            form.FindElement('points').Update(15)
+        # Button that resets stats back initial values as well as class name
+        if button == 'Reset Stats':
+            form.Fill({'STR': 5, 'INT': 5, 'DEX': 5})
             if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
 
         # Class info button

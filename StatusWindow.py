@@ -41,7 +41,7 @@ def status_window():
     
     form.ReadNonBlocking()
     form.FindElement('magic').Update(disabled=True)
-    
+   
     class_list = []
 
     while True:
@@ -72,6 +72,9 @@ def status_window():
         elif dex >= 10:
             class_list.append('Rogue')
 
+        if intel < 10:
+            form.FindElement('magic').Update(disabled=True)     
+            
         # Classes based on two stats:
         if strength >= 10 and intel >= 10:
             class_list.append('Sword Mage')
@@ -98,6 +101,10 @@ def status_window():
 
         # The class displayed in the window will be the last item that was appended to the class_list
         form.FindElement('class').Update(class_list[-1])
+        
+        # Makes the class list only one item (the last class selected)
+        if len(class_list) >= 2:
+            del class_list[:-1]
 
         # Class info button
         if button == 'Class Info' and class_list[-1] == '':

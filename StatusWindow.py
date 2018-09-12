@@ -39,6 +39,9 @@ def status_window():
 
     form.Layout(layout)
     
+    form.ReadNonBlocking()
+    form.FindElement('magic').Update(disabled=True)
+    
     class_list = []
 
     while True:
@@ -65,6 +68,7 @@ def status_window():
             class_list.append('Warrior')
         elif intel >= 10:
             class_list.append('Wizard')
+            form.FindElement('magic').Update(disabled=False)
         elif dex >= 10:
             class_list.append('Rogue')
 
@@ -83,8 +87,8 @@ def status_window():
         # What the 'Magic Type' button does and an example of it changing the class
         if button == 'Magic Type':
             values = magic_types()
-            if values[0] is True and form.FindElement('class').DisplayText == 'Wizard':
-                form.FindElement('class').Update('Fire' + ' Wizard')
+            if values[0] is True and class_list[-1] == 'Wizard':
+                class_list.append('Fire Wizard')
 
         # Button that resets stats back initial values as well as class name
         if button == 'Reset Stats':

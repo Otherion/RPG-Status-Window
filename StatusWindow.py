@@ -18,10 +18,6 @@ def status_window():
 
     sg.ChangeLookAndFeel('TealMono')  #Changes color scheme of window created
     form = sg.FlexForm('Status Window', auto_size_text=True, auto_size_buttons=False, grab_anywhere=False, return_keyboard_events=True)
-    
-    #Classes are placeholder names and will change
-    class_list = ['Warrior', 'Wizard', 'Rogue', 'Sword Mage', 'Mercenary', 'Sorcerer', 'All-Rounder']
-
 
     # Layout for the status window
     layout = [[sg.Text('Name:'), sg.Text('', size=(20, 1), background_color='black', text_color='white', key='cname'),
@@ -42,6 +38,8 @@ def status_window():
               [sg.ReadFormButton('Reset Stats'), sg.Text(' ' * 51), sg.Exit()]]
 
     form.Layout(layout)
+    
+    class_list = []
 
     while True:
         button, values = form.Read()
@@ -60,27 +58,27 @@ def status_window():
         except:
             continue
 
-        if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
+        if all((strength, intel, dex)) < 10: class_list.append('')
 
         # Classes based on one stat:
         if strength >= 10:
-            form.FindElement('class').Update(class_list[0])
+            class_list.append('Warrior')
         elif intel >= 10:
-            form.FindElement('class').Update(class_list[1])  # Class is displayed in window when the stat requirements are met  (stat requirements are placeholder)
+            class_list.append('Wizard')
         elif dex >= 10:
-            form.FindElement('class').Update(class_list[2])
+            class_list.append('Rogue')
 
         # Classes based on two stats:
         if strength >= 10 and intel >= 10:
-            form.FindElement('class').Update(class_list[3])
+            class_list.append('Sword Mage')
         elif strength >= 10 and dex >= 10:
-            form.FindElement('class').Update(class_list[4])
+            class_list.append('Mercenary')
         elif intel >= 10 and dex >= 10:
-            form.FindElement('class').Update(class_list[5])
+            class_list.append('Sorcerer')
 
         # Classes based on three stats:
         if strength >= 10 and intel >= 10 and dex >= 10:
-            form.FindElement('class').Update(class_list[6])
+            class_list.append('All-Rounder')
             
         # What the 'Magic Type' button does and an example of it changing the class
         if button == 'Magic Type':
@@ -91,10 +89,14 @@ def status_window():
         # Button that resets stats back initial values as well as class name
         if button == 'Reset Stats':
             form.Fill({'STR': 5, 'INT': 5, 'DEX': 5})
-            if all((strength, intel, dex)) < 10: form.FindElement('class').Update('')
+            form.FindElement('magic').Update(disabled=True)
+            class_list.clear(); class_list.append('')  # Clears the list then appends an empty string to it as the first item
+
+        # The class displayed in the window will be the last item that was appended to the class_list
+        form.FindElement('class').Update(class_list[-1])
 
         # Class info button
-        if button == 'Class Info' and form.FindElement('class').DisplayText == '':
+        if button == 'Class Info' and class_list[-1] == '':
             sg.Popup('Not a Class:', 'If you see this, go back and obtain a class!')
-        if button == 'Class Info' and form.FindElement('class').DisplayText == 'Warrior':  # Example of a popup display explaining the class when the button is pressed
+        if button == 'Class Info' and class_list[-1] == 'Warrior':                         # Example of a popup display explaining the class when the button is pressed
             sg.Popup('Warrior Class:', 'A class that specializes in melee combat')         # Placeholder descriptions

@@ -2,13 +2,13 @@ import PySimpleGUI as sg
 
 def magic_types():
     with sg.FlexForm('Popup') as form: # begin with a blank form
-
+        
         layout = [[sg.Text('Choose a magic to specialize in:')],
-                  [sg.Radio('Fire', 'magic', size=(8, 1)), sg.Radio('Ice', 'magic', size=(8, 1))],
-                  [sg.Radio('Water', 'magic', size=(8, 1)), sg.Radio('Space', 'magic', size=(8, 1))],
-                  [sg.Radio('Earth', 'magic', size=(8, 1)), sg.Radio('Time', 'magic', size=(8, 1))],
-                  [sg.Radio('Wind', 'magic', size=(8, 1)), sg.Radio('Holy', 'magic', size=(8, 1))],
-                  [sg.Radio('Electricity', 'magic', size=(8, 1)), sg.Radio('Shadow', 'magic', size=(8, 1))],
+                  [sg.Radio('Fire', 'magic', size=(8, 1), key='Fire'), sg.Radio('Ice', 'magic', size=(8, 1), key='Ice')],
+                  [sg.Radio('Water', 'magic', size=(8, 1), key='Water'), sg.Radio('Space', 'magic', size=(8, 1), key='Space')],
+                  [sg.Radio('Earth', 'magic', size=(8, 1), key='Earth'), sg.Radio('Time', 'magic', size=(8, 1), key='Time')],
+                  [sg.Radio('Wind', 'magic', size=(8, 1), key='Wind'), sg.Radio('Holy', 'magic', size=(8, 1), key='Holy')],
+                  [sg.Radio('Electricity', 'magic', size=(8, 1), key='Electricity'), sg.Radio('Shadow', 'magic', size=(8, 1), key='Shadow')],
                   [sg.OK()]]
 
         button, values = form.LayoutAndRead(layout)
@@ -71,16 +71,9 @@ def status_window():
         # What the 'Magic Type' button does 
         if button == 'Magic Type':
             emagic = magic_types()
-            if emagic[0] is True: element.append('Fire')
-            if emagic[1] is True: element.append('Ice')
-            if emagic[2] is True: element.append('Water')
-            if emagic[3] is True: element.append('Space')
-            if emagic[4] is True: element.append('Earth')
-            if emagic[5] is True: element.append('Time')
-            if emagic[6] is True: element.append('Wind')
-            if emagic[7] is True: element.append('Holy')
-            if emagic[8] is True: element.append('Electricity')
-            if emagic[9] is True: element.append('Shadow')
+            for key, values in emagic.items():
+                if values:
+                    element.append(key)
         
         # Classes based on one stat:
         if strength >= 10:

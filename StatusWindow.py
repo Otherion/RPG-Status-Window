@@ -23,16 +23,16 @@ def status_window():
     layout = [[sg.Text('Name:'), sg.Text('', size=(20, 1), background_color='black', text_color='white', key='cname'),
                sg.ReadFormButton('Choose Name')],
               [sg.Text('_' * 55)],
-              [sg.Text('Stats:')],
-              [sg.Text('STR:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=5, key='STR', size=(5, 1), change_submits=True)],
-              [sg.Text('INT:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=5, key='INT', size=(5, 1), change_submits=True),
+              [sg.Text('Stats:'), sg.ReadFormButton('Stat Details')],
+              [sg.Text('ATK:', size=(5, 1)),
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='ATK', size=(5, 1), change_submits=True)],
+              [sg.Text('MAG:', size=(5, 1)),
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='MAG', size=(5, 1), change_submits=True),
                sg.ReadFormButton('Magic Type')],
-              [sg.Text('DEX:', size=(5, 1)),
-               sg.Spin([i for i in range(5, 101)], initial_value=5, key='DEX', size=(5, 1), change_submits=True)],
-              [sg.Text('Class:', size=(5, 1), font=('Helvetica', 20)),
-               sg.Text('', size=(13, 1), font=('Helvetica', 20), background_color='black', text_color='white',
+              [sg.Text('NIM:', size=(5, 1)),
+               sg.Spin([i for i in range(5, 101)], initial_value=5, key='NIM', size=(5, 1), change_submits=True)],
+              [sg.Text('Class:', size=(5, 1), font=(None, 20)),
+               sg.Text('', size=(13, 1), font=(None, 20), background_color='black', text_color='white',
                        justification='center', key='class'),
                sg.ReadFormButton('Class Info')],
               [sg.ReadFormButton('Reset Stats'), sg.Text(' ' * 51), sg.Exit()]]
@@ -52,36 +52,42 @@ def status_window():
             name = sg.PopupGetText('What is your name?')
             form.FindElement('cname').Update(name)
         
+        # Explanation of stats when button is clicked
+        if button == 'Stat Details':
+            sg.Popup('Stat Explanations:', 'Attack (ATK): This stat affects damage done via physical attacks.',
+                     'Magic (MAG): This stat affects magic damage and the effectiveness of magic.',
+                     'Nimbleness (NIM): This stat affects speed and evasive of a character.')
+        
+        
         if button is None or button == 'Exit': break     # Program ends successfully if 'Quit' is clicked or window is closed
 
         #When no stat requirements are met:
         try:
-            strength = int(values['STR'])
-            intel = int(values['INT'])
-            dex = int(values['DEX'])
+            attack  = int(values['ATK'])
+            magical = int(values['MAG'])
+            nimble  = int(values['NIM'])
         except:
             continue
 
-        if all((strength, intel, dex)) < 10: class_list.append('')
-        
-        if intel < 10 and len(element) > 0: 
+        if all((attack, magical, nimble)) < 10: class_list.append('')
+
+        if magical < 10 and len(element) > 0:
             del element[-1]
             form.FindElement('magic').Update(disabled=True)
 
-        # What the 'Magic Type' button does 
         if button == 'Magic Type':
             emagic = magic_types()
             for key, values in emagic.items():
                 if values:
                     element.append(key)
-        
+
         # Classes based on one stat:
-        if strength >= 10:
+        if attack >= 10:
             class_list.append('Warrior')
-        elif intel >= 10 and len(element) == 0:
+        elif magical >= 10 and len(element) == 0:
             class_list.append('Wizard')
             form.FindElement('magic').Update(disabled=False)
-        elif intel >= 10 and len(element) != 0:
+        elif magical >= 10 and len(element) != 0:
             if element[-1] == 'Fire': class_list.append('Pyromancer')
             elif element[-1] == 'Ice': class_list.append('Cryomancer')
             elif element[-1] == 'Water': class_list.append('Hydromancer')
@@ -92,27 +98,24 @@ def status_window():
             elif element[-1] == 'Holy': class_list.append('Divine Mage')
             elif element[-1] == 'Electricity': class_list.append('Lightning Mage')
             elif element[-1] == 'Shadow': class_list.append('Umbral Mage')
-        elif dex >= 10:
+        elif nimble >= 10:
             class_list.append('Rogue')
 
-        if intel < 10:
-            form.FindElement('magic').Update(disabled=True)     
-            
         # Classes based on two stats:
-        if strength >= 10 and intel >= 10:
-            class_list.append('Sword Mage')
-        elif strength >= 10 and dex >= 10:
-            class_list.append('Mercenary')
-        elif intel >= 10 and dex >= 10:
-            class_list.append('Sorcerer')
+        if attack >= 10 and magical >= 10:
+            class_list.append('Spellblade')
+        elif attack >= 10 and nimble >= 10:
+            class_list.append('Samurai')
+        elif magical >= 10 and nimble >= 10:
+            class_list.append('Mystic Rogue')
 
-        # Classes based on three stats:
-        if strength >= 10 and intel >= 10 and dex >= 10:
+        # Classes based on three stats
+        if attack >= 10 and magical >= 10 and nimble >= 10:
             class_list.append('All-Rounder')
 
         # Button that resets stats back initial values as well as class name
         if button == 'Reset Stats':
-            form.Fill({'STR': 5, 'INT': 5, 'DEX': 5})
+            form.Fill({'ATK': 5, 'MAG': 5, 'NIM': 5})
             form.FindElement('magic').Update(disabled=True)
             class_list.clear(); class_list.append('')  # Clears the list then appends an empty string to it as the first item
             element.clear()  # Clears the element list to an empty list

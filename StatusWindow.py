@@ -6,7 +6,7 @@ def magic_types():
         layout = [[sg.Text('Choose a magic to specialize in:')],
                   [sg.Radio('Fire', 'magic', size=(8, 1), key='Fire'), sg.Radio('Ice', 'magic', size=(8, 1), key='Ice')],
                   [sg.Radio('Water', 'magic', size=(8, 1), key='Water'), sg.Radio('Space', 'magic', size=(8, 1), key='Space')],
-                  [sg.Radio('Earth', 'magic', size=(8, 1), key='Earth'), sg.Radio('Time', 'magic', size=(8, 1), key='Time')],
+                  [sg.Radio('Earth', 'magic', size=(8, 1), key='Earth'), sg.Radio('Null', 'magic', size=(8, 1), key='Null')],
                   [sg.Radio('Wind', 'magic', size=(8, 1), key='Wind'), sg.Radio('Holy', 'magic', size=(8, 1), key='Holy')],
                   [sg.Radio('Electricity', 'magic', size=(8, 1), key='Electricity'), sg.Radio('Shadow', 'magic', size=(8, 1), key='Shadow')],
                   [sg.OK()]]
@@ -28,7 +28,7 @@ def status_window():
                sg.Spin([i for i in range(5, 101)], initial_value=5, key='ATK', size=(5, 1), change_submits=True)],
               [sg.Text('MAG:', size=(5, 1)),
                sg.Spin([i for i in range(5, 101)], initial_value=5, key='MAG', size=(5, 1), change_submits=True),
-               sg.ReadFormButton('Magic Type')],
+               sg.ReadFormButton('Magic Type', key='magic')],
               [sg.Text('NIM:', size=(5, 1)),
                sg.Spin([i for i in range(5, 101)], initial_value=5, key='NIM', size=(5, 1), change_submits=True)],
               [sg.Text('Class:', size=(5, 1), font=(None, 20)),
@@ -39,7 +39,7 @@ def status_window():
 
     form.Layout(layout)
     
-    form.ReadNonBlocking()
+    form.Finalize()
     form.FindElement('magic').Update(disabled=True)
    
     class_list = []
@@ -93,7 +93,7 @@ def status_window():
             elif element[-1] == 'Water': class_list.append('Hydromancer')
             elif element[-1] == 'Space': class_list.append('Spacial Wizard')
             elif element[-1] == 'Earth': class_list.append('Terra Mage')
-            elif element[-1] == 'Time': class_list.append('Chronomancer')
+            elif element[-1] == 'Null': class_list.append('Null-Mage')
             elif element[-1] == 'Wind': class_list.append('Sky Mage')
             elif element[-1] == 'Holy': class_list.append('Divine Mage')
             elif element[-1] == 'Electricity': class_list.append('Lightning Mage')

@@ -1,23 +1,22 @@
 import PySimpleGUI as sg
 
 def magic_types():
-    with sg.FlexForm('Popup') as form: # begin with a blank form
-        
-        layout = [[sg.Frame('Magic Specialization:', layout=[[
-                   sg.Radio('Fire', 'magic', size=(8, 1), key='Fire'), sg.Radio('Ice', 'magic', size=(8, 1), key='Ice')],
-                  [sg.Radio('Water', 'magic', size=(8, 1), key='Water'), sg.Radio('Space', 'magic', size=(8, 1), key='Space')],
-                  [sg.Radio('Earth', 'magic', size=(8, 1), key='Earth'), sg.Radio('Null', 'magic', size=(8, 1), key='Null')],
-                  [sg.Radio('Wind', 'magic', size=(8, 1), key='Wind'), sg.Radio('Holy', 'magic', size=(8, 1), key='Holy')],
-                  [sg.Radio('Electricity', 'magic', size=(8, 1), key='Electricity'), sg.Radio('Shadow', 'magic', size=(8, 1), key='Shadow')],
-                  [sg.OK()]])]]
+    layout = [[sg.Frame('Magic Specialization:', layout=[[
+               sg.Radio('Fire', 'magic', size=(8, 1), key='Fire'), sg.Radio('Ice', 'magic', size=(8, 1), key='Ice')],
+              [sg.Radio('Water', 'magic', size=(8, 1), key='Water'), sg.Radio('Space', 'magic', size=(8, 1), key='Space')],
+              [sg.Radio('Earth', 'magic', size=(8, 1), key='Earth'), sg.Radio('Null', 'magic', size=(8, 1), key='Null')],
+              [sg.Radio('Wind', 'magic', size=(8, 1), key='Wind'), sg.Radio('Holy', 'magic', size=(8, 1), key='Holy')],
+              [sg.Radio('Electricity', 'magic', size=(8, 1), key='Electricity'), sg.Radio('Shadow', 'magic', size=(8, 1), key='Shadow')],
+              [sg.OK()]])]]
 
-        button, values = form.LayoutAndRead(layout)
-        return values
+    window = sg.Window('Popup').Layout(layout)
+    button, values = window.Read()
+    return values
     
 def status_window():
 
     sg.ChangeLookAndFeel('TealMono')  #Changes color scheme of window created
-    form = sg.FlexForm('Status Window', auto_size_text=True, auto_size_buttons=False, grab_anywhere=False, return_keyboard_events=True)
+    window = sg.Window('Status Window', auto_size_text=True, auto_size_buttons=False, grab_anywhere=False, return_keyboard_events=True)
 
     istat = 5
     # Layout for the status window
@@ -37,16 +36,14 @@ def status_window():
                sg.ReadFormButton('Class Info')],
               [sg.ReadFormButton('Reset'), sg.Text(' ' * 51), sg.Exit()]]
 
-    form.Layout(layout)
-    
-    form.Finalize()
-    form.FindElement('magic').Update(disabled=True)
+    window.Layout(layout).Finalize()
+    window.FindElement('magic').Update(disabled=True)
    
     class_list = []
     element = []
 
     while True:
-        button, values = form.Read()
+        button, values = window.Read()
         
         if button in ('Exit', None): exit(0)     # Program ends successfully if 'Quit' is clicked or window is closed
 
@@ -63,7 +60,7 @@ def status_window():
 
         if magical < 10 and len(element) > 0:
             del element[-1]
-            form.FindElement('magic').Update(disabled=True)
+            window.FindElement('magic').Update(disabled=True)
 
         if button == 'magic':
             emagic = magic_types()
@@ -76,7 +73,7 @@ def status_window():
             class_list.append('Warrior')
         if min(attack, nimble) < magical >= 10 and len(element) == 0:
             class_list.append('Wizard')
-            form.FindElement('magic').Update(disabled=False)
+            window.FindElement('magic').Update(disabled=False)
         if min(attack, nimble) < magical >= 10 and len(element) != 0:
             if element[-1] == 'Fire': class_list.append('Pyromancer')
             if element[-1] == 'Ice': class_list.append('Cryomancer')
@@ -105,14 +102,14 @@ def status_window():
 
         # Button that resets stats back initial values as well as class name
         if button == 'Reset':
-            form.Fill({'ATK': 5, 'MAG': 5, 'NIM': 5})
-            form.FindElement('cname').Update('')            # Deletes any name chosen for the character
-            form.FindElement('magic').Update(disabled=True)
-            class_list.clear(); class_list.append('')       # Clears the list then appends an empty string to it as the first item
-            element.clear()                                 # Clears the element list to an empty list
+            window.Fill({'ATK': 5, 'MAG': 5, 'NIM': 5})
+            window.FindElement('cname').Update('')            # Deletes any name chosen for the character
+            window.FindElement('magic').Update(disabled=True)
+            class_list.clear(); class_list.append('')         # Clears the list then appends an empty string to it as the first item
+            element.clear()                                   # Clears the element list to an empty list
             
         # The class displayed in the window will be the last item that was appended to the class_list
-        form.FindElement('class').Update(class_list[-1])
+        window.FindElement('class').Update(class_list[-1])
         
         # Makes the class list and element list only one item long
         if len(class_list) >= 2:
